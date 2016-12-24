@@ -10,7 +10,7 @@ public class ThreadApp {
     public static final int ARRAY_SIZE = 40_000_000;
 
     /* Number of threads */
-    public static final int NUM_THREADS = 8;
+    public static final int NUM_THREADS = 16;
 
     /**
      * Constructor
@@ -24,12 +24,11 @@ public class ThreadApp {
      * @param size size of new array
      * @return shuffled array filled with unique numbers
      */
-    private int[] fillArray(int size) {
+    private int[] createArray(int size) {
         int[] arr = new int[size];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = i;
         }
-        shuffle(arr);
         return arr;
     }
 
@@ -82,7 +81,10 @@ public class ThreadApp {
         ArrayThread[] arrThreads = new ArrayThread[numThreads];
 
         for (int i = 0; i < numThreads; i++) {
-            arrThreads[i] = new ArrayThread(arr, i * arr.length / numThreads, arr.length / numThreads);
+            int from = i * arr.length / numThreads;
+            int to = (i + 1) * arr.length / numThreads;
+
+            arrThreads[i] = new ArrayThread(arr, from, to);
             Thread thread = new Thread(arrThreads[i]);
             thread.start();
             try {
@@ -92,12 +94,7 @@ public class ThreadApp {
             }
         }
 
-        long sum = 0;
-        for (ArrayThread thrd : arrThreads ) {
-            sum += thrd.getSum();
-        }
-
-        return sum;
+        return ArrayThread.sum;
     }
 
     /**
@@ -105,7 +102,9 @@ public class ThreadApp {
      */
     private void process() {
         System.out.println("Creating array...");
-        int[] arr = fillArray(ARRAY_SIZE);
+        int[] arr = createArray(ARRAY_SIZE);
+        System.out.println("Shuffling array...");
+        shuffle(arr);
         System.out.println("Linear sum...");
         System.out.println("LinearSum = " + linearSum(arr));
         System.out.println("Thread sum...");
@@ -117,6 +116,6 @@ public class ThreadApp {
      * Main function
      */
     public static void main(String[] args) {
-        ThreadApp app = new ThreadApp();
+        new ThreadApp();
     }
 }

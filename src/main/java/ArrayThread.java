@@ -1,20 +1,17 @@
 /**
+ * Represents one thread
  * Created by a-morenets (alexey.morenets@gmail.com) on 24.12.2016.
  */
 public class ArrayThread implements Runnable {
     private int[] arr;
     private int from;
-    private int size;
-    private long sum;
+    private int to;
+    public static /*volatile*/ long sum;
 
-    public ArrayThread(int[] arr, int from, int size) {
+    public ArrayThread(int[] arr, int from, int to) {
         this.arr = arr;
         this.from = from;
-        this.size = size;
-    }
-
-    public long getSum() {
-        return sum;
+        this.to = to;
     }
 
     /**
@@ -29,8 +26,10 @@ public class ArrayThread implements Runnable {
      * @see Thread#run()
      */
     public void run() {
-        for (int i = from; i < from + size; i++) {
-            sum += arr[i];
+        for (int i = from; i < to; i++) {
+//            synchronized(this) {
+                sum += arr[i];
+//            }
         }
     }
 }
