@@ -1,16 +1,29 @@
 import java.util.Random;
 
 /**
+ * Evaluating sum of array elements in several threads
  * Created by a-morenets (alexey.morenets@gmail.com) on 24.12.2016.
  */
 public class ThreadApp {
 
+    /* Array size */
     public static final int ARRAY_SIZE = 40_000_000;
 
+    /* Number of threads */
+    public static final int NUM_THREADS = 8;
+
+    /**
+     * Constructor
+     */
     public ThreadApp() {
         process();
     }
 
+    /**
+     * Creates an array and fills it with unique numbers
+     * @param size size of new array
+     * @return shuffled array filled with unique numbers
+     */
     private int[] fillArray(int size) {
         int[] arr = new int[size];
         for (int i = 0; i < arr.length; i++) {
@@ -20,6 +33,10 @@ public class ThreadApp {
         return arr;
     }
 
+    /**
+     * In-place shuffle array elements by replacing each element with randomly selected one
+     * @param arr given array
+     */
     private void shuffle(int[] arr) {
         Random rnd = new Random();
 
@@ -30,25 +47,42 @@ public class ThreadApp {
         }
     }
 
+    /**
+     * Swap two array elements
+     * @param arr given array
+     * @param i1  index of 1st element
+     * @param i2  index of 2nd element
+     */
     private void swap(int[] arr, int i1, int i2) {
         int tmp = arr[i1];
         arr[i1] = arr[i2];
         arr[i2] = tmp;
     }
 
+    /**
+     * Evaluates sum of all array elements adding all elements in one loop sequentially
+     * @param arr given array
+     * @return sum of all array elements
+     */
     private long linearSum(int[] arr) {
         long sum = 0;
-        for (int item : arr) {
-            sum += item;
+        for (int a : arr) {
+            sum += a;
         }
         return sum;
     }
 
-    private long sum(int[] arr, int numParts) {
-        ArrayThread[] arrThreads = new ArrayThread[numParts];
+    /**
+     * Evaluates partial sums of all array elements in several threads
+     * @param arr        given array
+     * @param numThreads number of threads
+     * @return sum of all array elements
+     */
+    private long sum(int[] arr, int numThreads) {
+        ArrayThread[] arrThreads = new ArrayThread[numThreads];
 
-        for (int i = 0; i < numParts; i++) {
-            arrThreads[i] = new ArrayThread(arr, i * arr.length / numParts, arr.length / numParts);
+        for (int i = 0; i < numThreads; i++) {
+            arrThreads[i] = new ArrayThread(arr, i * arr.length / numThreads, arr.length / numThreads);
             Thread thread = new Thread(arrThreads[i]);
             thread.start();
             try {
@@ -66,16 +100,22 @@ public class ThreadApp {
         return sum;
     }
 
+    /**
+     * Runner
+     */
     private void process() {
         System.out.println("Creating array...");
         int[] arr = fillArray(ARRAY_SIZE);
         System.out.println("Linear sum...");
         System.out.println("LinearSum = " + linearSum(arr));
         System.out.println("Thread sum...");
-        System.out.println("ThreadSum = " + sum(arr, 4));
+        System.out.println("ThreadSum = " + sum(arr, NUM_THREADS));
 
     }
 
+    /**
+     * Main function
+     */
     public static void main(String[] args) {
         ThreadApp app = new ThreadApp();
     }
