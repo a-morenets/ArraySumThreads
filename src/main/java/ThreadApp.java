@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -78,15 +79,19 @@ public class ThreadApp {
      * @return sum of all array elements
      */
     private long sum(int[] arr, int numThreads) {
-        ArrayThread[] arrThreads = new ArrayThread[numThreads];
+        ArrayThread[] arrayThreads = new ArrayThread[numThreads];
+        Thread[] threads = new Thread[numThreads];
 
         for (int i = 0; i < numThreads; i++) {
             int from = i * arr.length / numThreads;
             int to = (i + 1) * arr.length / numThreads;
 
-            arrThreads[i] = new ArrayThread(arr, from, to);
-            Thread thread = new Thread(arrThreads[i]);
-            thread.start();
+            arrayThreads[i] = new ArrayThread(arr, from, to);
+            threads[i] = new Thread(arrayThreads[i]);
+            threads[i].start();
+        }
+
+        for (Thread thread : threads) {
             try {
                 thread.join();
             } catch (InterruptedException e) {
@@ -94,7 +99,8 @@ public class ThreadApp {
             }
         }
 
-        return ArrayThread.sum;
+//        return ArrayThread.sum;
+        return Arrays.stream(arrayThreads).mapToLong(ArrayThread::getSum).sum();
     }
 
     /**
@@ -103,8 +109,8 @@ public class ThreadApp {
     private void process() {
         System.out.println("Creating array...");
         int[] arr = createArray(ARRAY_SIZE);
-        System.out.println("Shuffling array...");
-        shuffle(arr);
+//        System.out.println("Shuffling array...");
+//        shuffle(arr);
         System.out.println("Linear sum...");
         System.out.println("LinearSum = " + linearSum(arr));
         System.out.println("Thread sum...");
