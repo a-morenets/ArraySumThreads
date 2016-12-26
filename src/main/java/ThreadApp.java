@@ -99,8 +99,8 @@ public class ThreadApp {
             }
         }
 
-//        return ArrayThread.sum;
-        return Arrays.stream(arrayThreads).mapToLong(ArrayThread::getSum).sum();
+        return ArrayThread.sum;
+//        return Arrays.stream(arrayThreads).mapToLong(ArrayThread::getSum).sum();
     }
 
     /**
