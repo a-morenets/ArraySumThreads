@@ -1,4 +1,5 @@
-import java.util.Arrays;
+import org.jetbrains.annotations.Contract;
+
 import java.util.Random;
 
 /**
@@ -8,15 +9,15 @@ import java.util.Random;
 public class ThreadApp {
 
     /* Array size */
-    public static final int ARRAY_SIZE = 40_000_000;
+    private static final int ARRAY_SIZE = 40_000_000;
 
     /* Number of threads */
-    public static final int NUM_THREADS = 16;
+    private static final int NUM_THREADS = 256;
 
     /**
      * Constructor
      */
-    public ThreadApp() {
+    private ThreadApp() {
         process();
     }
 
@@ -25,6 +26,7 @@ public class ThreadApp {
      * @param size size of new array
      * @return shuffled array filled with unique numbers
      */
+    @Contract(pure = true)
     private int[] createArray(int size) {
         int[] arr = new int[size];
         for (int i = 0; i < arr.length; i++) {
@@ -40,7 +42,7 @@ public class ThreadApp {
     private void shuffle(int[] arr) {
         Random rnd = new Random();
 
-        for (int anArr : arr) {
+        for (int ignored : arr) {
             int i1 = rnd.nextInt(arr.length);
             int i2 = rnd.nextInt(arr.length);
             swap(arr, i1, i2);
@@ -64,6 +66,7 @@ public class ThreadApp {
      * @param arr given array
      * @return sum of all array elements
      */
+    @Contract(pure = true)
     private long linearSum(int[] arr) {
         long sum = 0;
         for (int a : arr) {
@@ -79,15 +82,13 @@ public class ThreadApp {
      * @return sum of all array elements
      */
     private long sum(int[] arr, int numThreads) {
-        ArrayThread[] arrayThreads = new ArrayThread[numThreads];
         Thread[] threads = new Thread[numThreads];
 
         for (int i = 0; i < numThreads; i++) {
-            int from = i * arr.length / numThreads;
-            int to = (i + 1) * arr.length / numThreads;
+            int from = arr.length / numThreads * i;
+            int to = arr.length / numThreads * (i + 1);
 
-            arrayThreads[i] = new ArrayThread(arr, from, to);
-            threads[i] = new Thread(arrayThreads[i]);
+            threads[i] = new Thread(new ArrayThread(arr, from, to));
             threads[i].start();
         }
 
@@ -100,7 +101,6 @@ public class ThreadApp {
         }
 
         return ArrayThread.sum;
-//        return Arrays.stream(arrayThreads).mapToLong(ArrayThread::getSum).sum();
     }
 
     /**
@@ -109,8 +109,8 @@ public class ThreadApp {
     private void process() {
         System.out.println("Creating array...");
         int[] arr = createArray(ARRAY_SIZE);
-//        System.out.println("Shuffling array...");
-//        shuffle(arr);
+        System.out.println("Shuffling array...");
+        shuffle(arr);
         System.out.println("Linear sum...");
         System.out.println("LinearSum = " + linearSum(arr));
         System.out.println("Thread sum...");

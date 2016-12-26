@@ -6,17 +6,12 @@ public class ArrayThread implements Runnable {
     private int[] arr;
     private int from;
     private int to;
-    public static volatile long sum;
-//    private long sum;
+    static /*volatile*/ long sum;
 
     ArrayThread(int[] arr, int from, int to) {
         this.arr = arr;
         this.from = from;
         this.to = to;
-    }
-
-    public long getSum() {
-        return sum;
     }
 
     /**
@@ -32,7 +27,6 @@ public class ArrayThread implements Runnable {
      */
     public void run() {
         for (int i = from; i < to; i++) {
-//            synchronized(this) {
             synchronized(Thread.class) {
                 sum += arr[i];
             }
