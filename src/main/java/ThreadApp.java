@@ -1,4 +1,4 @@
-import org.jetbrains.annotations.Contract;
+//import org.jetbrains.annotations.Contract;
 
 import java.util.Random;
 
@@ -26,7 +26,7 @@ public class ThreadApp {
      * @param size size of new array
      * @return shuffled array filled with unique numbers
      */
-    @Contract(pure = true)
+//    @Contract(pure = true)
     private int[] createArray(int size) {
         int[] arr = new int[size];
         for (int i = 0; i < arr.length; i++) {
@@ -66,7 +66,7 @@ public class ThreadApp {
      * @param arr given array
      * @return sum of all array elements
      */
-    @Contract(pure = true)
+//    @Contract(pure = true)
     private long linearSum(int[] arr) {
         long sum = 0;
         for (int a : arr) {
