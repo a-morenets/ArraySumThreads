@@ -1,3 +1,5 @@
+package main.java;
+
 /**
  * Represents one thread
  * Created by a-morenets (alexey.morenets@gmail.com) on 24.12.2016.

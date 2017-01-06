@@ -1,4 +1,4 @@
-//import org.jetbrains.annotations.Contract;
+package main.java;
 
 import java.util.Random;
 
