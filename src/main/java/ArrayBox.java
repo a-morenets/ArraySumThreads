@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -29,9 +30,9 @@ public class ArrayBox {
     public void shuffle() {
         Random rnd = new Random();
 
-        for (int element : array) {
+        for (int i = 0; i < array.length; i++) {
             int randomIndex = rnd.nextInt(array.length);
-            swap(array, element, randomIndex);
+            swap(array, i, randomIndex);
         }
     }
 
@@ -63,4 +64,7 @@ public class ArrayBox {
         return sum;
     }
 
+    public void printArray() {
+        System.out.println(Arrays.toString(array));
+    }
 }
